@@ -17,9 +17,9 @@
 3. 所有源代码
    1. [微信小程序点餐系统前端](https://github.com/uml163/Wechat/releases/tag/final)
    2. [商家管理系统 web 前端](https://github.com/uml163/Manager/releases/tag/final)
-   3. [服务端+后台+数据库]()
+   3. 服务端+后台+数据库
 4. [软件需求规格说明书(SRS)](https://github.com/uml163/Dragon-for-food/blob/master/软件需求规格说明书.md)
-5. [软件设计文档(SDS)](https://uml163.github.io/UML/report/documents/8.3-architecture.html)
+5. [软件设计文档(SDS)](软件设计文档(SDS).md)
 6. [小组分工与贡献率说明](小组分工与贡献率说明)
 
 

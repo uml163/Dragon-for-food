@@ -1,0 +1,403 @@
+## 软件设计文档SD
+
+
+
+### 1.1前端
+
+
+#### 1.1.1前端技术选择
+
+
+* 前端候选技术：mpVue、wepy与微信小程序
+
+* 三种技术优缺点比较：
+ * mpVue
+     * 优势：
+      * 支持 npm 包，支持 css 预处理器
+      * 可以直接使用 vuex 做应用状态管理
+     * 劣势：
+      * 开发者需要熟悉 vue ，目前版本（v1.0.5）不支持 slot 
+      * 框架发布时间比较短，里面存在很多对小程序原生的替换，容易出现你想写的功能vue里找不到和你写的小程序功能在vue里不是这样写，增加解决问题的时间
+ * wepy
+	  * 优势：
+	    * 支持 slot 组件内容分发插槽，支持 npm 包，支持 css 预处理器
+	    * 可以将 Redux or Mobx 引入到项目中
+	  * 劣势：
+	    * 云信暂不支持wepy开发
+	    * 开发者需要熟悉 vue 和 wepy 两种语法
+	    * 产品市场
+ * 微信小程序：
+	   * 优点：
+	     * 使用者角度：简单方便，不用额外安装app 、安全
+	     * 开发者角度：节省成本和降低了门槛难度
+	     * 微信本身的用户基础带来的流量优势、宣传更方便（转发分享）扫描二维码即可
+	     * 速度快、不占内存
+	   * 劣势：
+	     * 小程序文件限制、不适用于大型的小程序开发
+	     * 用户流失较快
+     
+* 下面用几张图片简单概括三者的区别
+![](https://github.com/uml163/UML/blob/master/report/documents/pictures/zfr-1.png?raw=true)
+
+![](https://github.com/uml163/UML/blob/master/report/documents/pictures/zfr-2.png?raw=true)
+
+* 我们的选择：
+
+	* 客户端为便于顾客使用和轻量级开发、我们选择微信小程序作为客户端。
+	* 商家端对于产品的便利性需求并不是很高，而对产品功能、产品的稳定性有着较高的需求，因此我们选用WEb端作为商家端。
+
+
+
+##### 小程序架构设计
+
+* 小程序前端包含多个文件
+* 项目目录：
+
+![](https://i.imgur.com/70swOqY.png)
+
+ * 小程序的主体部分由三个文件组成----app.js、app.json、app.wxss
+  *  app.js:小程序逻辑
+  *  app.json:小程序公共配置
+  *  app.wxss:小程序公共样式表
+ 
+ * 页面的四个文件
+  * js:页面逻辑
+  * wxml:页面结构
+  * json:页面配置
+  * wxss:页面样式表  
+ 
+ * Utils
+  * utils是放通用工具类方法的一个文件夹，将一些公共的代码抽离成为一个单独的 js (utils.js)文件，作为一个模块
+  
+ * 小程序的page文件包括页面
+  * cart：购物车页面
+  * food：选餐页面和点餐页面
+  * index：授权登陆页面
+  * my：个人信息页面（个人地址、评论以及订单信息）
+  * order：订单页面
+ 
+ * 小程序系统结构： 
+ 
+		    |
+			├── project.config.json //开发工具配置
+			├── app.js //小程序的全局逻辑
+			├── app.json //小程序的全局配置
+			├── app.wxss //小程序的全局样式
+			├── sitemap.json 
+			├── images //小程序利用到的图片
+			├── wxParse //模块文件
+			|
+			├── pages //小程序的页面文件存放文件夹
+			│   ├── index //主菜单页面
+			│   │   ├── index.js 主菜单页面逻辑文件
+			|   |   ├── index.json //主菜单页面配置文件
+			│   │   ├── index.wxml //主菜单页面结构文件
+			│   │   └── index.wxss  //主菜单页面样式文件
+			|   |
+			│   ├── cart //购物车页面
+			│   |   ├── cart.js //购物车页面逻辑文件
+			│   |   ├── cart.json //购物车页面配置文件
+			│   |   ├── cart.wxml //购物车页面结构文件
+			│   |   └── cart.wxss //购物车页面样式文件
+			|   |
+			│   ├── food 
+			│   |   ├── index.js //选餐页面逻辑文件
+			│   |   ├── index.json //选餐页面配置文件
+			│   |   ├── index.wxml //选餐页面结构文件
+			│   |   ├── index.wxss //选餐页面样式文件
+			│   |   ├── info.js //点餐页面逻辑文件
+			│   |   ├── info.json //点餐页面配置文件
+			|   |   ├── info.wxml //点餐页面结构文件
+			│   |   └── info.wxss //点餐页面样式文件
+			|   |
+			│   ├── order //订单页面
+			│   |   ├── order.js //订单页面逻辑文件
+			│   |   ├── order.json //订单页面配置文件
+			│   |   ├── order.wxml //订单页面结构文件
+			│   ├── └── order.wxss //订单页面样式文件
+			|   |
+			│   ├── my //个人信息页面
+			│   |   ├── addressList.js //个人地址页面逻辑文件
+			│   |   ├── addressList.json //个人地址页面配置文件
+			│   |   ├── addressList.wxml //个人地址页面结构文件
+			│   |   ├── addressList.wxss //个人地址页面样式文件
+			│   |   ├── addressSet.js //个人地址设置页面逻辑文件
+			│   |   ├── addressSet.json //个人地址设置页面配置文件
+			│   |   ├── addressSet.wxml //个人地址设置页面结构文件
+			│   |   ├── addressSet.wxss //个人地址设置页面样式文件
+			│   |   ├── comment.js //评论页面逻辑文件
+			│   |   ├── comment.json //评论页面配置文件
+			│   |   ├── comment.wxml //评论页面结构文件
+			│   |   ├── comment.wxss //评论页面样式文件
+			│   |   ├── commentList.js //评论列表逻辑文件
+			│   |   ├── commentList.json //评论列表配置文件
+			│   |   ├── commentList.wxml //评论列表结构文件
+			│   |   ├── commentList.wxss //评论列表样式文件
+			│   |   ├── index.js //个人信息主页逻辑文件
+			│   |   ├── index.json //个人信息主页配置文件
+			│   |   ├── index.wxml //个人信息主页结构文件
+			│   |   ├── index.wxss  //个人信息主页样式文件
+			│   |   ├── order_info.js //未完成订单逻辑文件
+			│   |   ├── order_info.json //未完成订单配置文件
+			│   |   ├── order_info.wxml //未完成订单结构文件
+			│   |   ├── order_info.wxss //未完成订单样式文件
+			│   |   ├── order.js //已完成订单逻辑文件
+			│   |   ├── order.json //已完成订单配置文件
+			│   |   ├── order.wxml //已完成订单结构文件
+			│   └── └── order.wxss //已完成订单样式文件
+			└── utils //模块
+
+
+##### 三种架构比较
+* MVC（Model-View-Controller）用户操作> View (负责接受用户的输入操作)>Controller（业务逻辑处理）>Model（数据持久化）>View（将结果通过View反馈给用户）
+
+* MVP将Controller改名为Presenter，同时改变了通信方向，使各部分之间的通信都是双向的，View与Model不发生联系，都通过Presenter传递，View非常薄，不部署任何业务逻辑，称为“被动视图”，即没有任何主动性，而Presenter非常厚，所有逻辑都部署在这里。
+
+* MVVM 将 Presenter 改名为 ViewModel，基本上与 MVP 模式完全一致，采用双向绑定（data-binding）：View的变动，自动反映在 ViewModel，ViewModel的变动，自动反映在 View
+
+#### 商家界面
+
+* JQuery + Bootstrap
+* JQuery是一个轻量级的javascript框架，极大的简化了js的编程
+ * jQuery提供了强大的元素选择器
+ * jQuery还是一个为事件处理特点设计的框架，提供了静态绑定事件和动态绑定事件，完善了事件的处理机制
+ * jQuery解决了大量浏览器之间的兼容性的问题
+ * jQuery提供了对css样式操作的支持
+* Bootstrap开发响应式布局、移动设备优先的Web项目，用于开发响应式布局，是一套用于 HTML、CSS 和 JS 开发的开源工具集
+* Bootstrap通过一系列定义好的CSS class和一些预定义好的jquery插件实现
+
+* 商家端页面设计简洁，将用户信息以及用户的订单情况显示在商家端，商家端的页面有：
+ * 登陆页面
+ * 主页面
+ * 账户管理页面
+ * 订单管理页面
+ * 菜单管理页面
+ * 用户管理页面
+
+* web结构的templates
+ 
+
+
+		|
+		├── templates
+		│   ├── account
+		│   │   ├── index.html
+		|   |   ├── index.js
+		│   │   ├── info.html
+		|   |   ├── set.html
+		│   ├── common
+		│   │   ├── layout_main.html
+		│   │   ├── layout_user.html
+		│   │   ├── pagenation.html
+		│   │   ├── tab_account.html
+		│   │   ├── tab_food.html
+		│   │   ├── tab_member.html
+		│   │   ├── tab_finance.html
+		│   │   ├── tab_stat.html	
+		│   │   └── user.html
+		|   |
+		│   ├── finance
+		│   |   ├── account.html 
+		│   |   ├── index.html 
+		│   |   └── pay_info.html 
+		│   ├── error
+		│   |   └── error.html 
+		│   ├── food
+		│   │   ├── cat_set.html
+		│   │   ├── cat.html
+		│   │   ├── index.html
+		│   │   ├── info.html
+		│   |   └── set.html 
+		│   ├── index
+		│   |   └── index.html 
+		│   ├── member
+		│   │   ├── comment.html
+		│   │   ├── index.html
+		│   │   ├── info.html
+		│   |   └── set.html 
+		│   ├── stat
+		│   │   ├── food.html
+		│   │   ├── index.html
+		│   │   ├── member.html
+		│   |   └── share.html 
+		│   ├── user
+		│   │   ├── edit.html
+		│   │   ├── login.html
+		│   |   └── reset_pwd.html 
+		└── 
+
+
+#### 服务端
+
+* java+ jesery
+  * 优势：
+    * Java SE 规范，这让 Java 即能像 C/C++ 一样贴近操作系统，又自由处理网络相关、IO 相关的内容，功能很强大。
+    * Java EE 规范，完善的规范使得 Java 后端发展有了很好的规范基础。统一的环境、规范让框架和业务代码有了交互的标准。
+   * 劣势：
+     * 开发效率相对较低。
+     * 虽然上手开发相对容易，但真正理解框架底层的运行原理相对较难，需要大量的学习和经验。
+* GO
+  * 优势：
+    * Golang 的设计理念很明确，就是将动态类型语言的编程容易度和静态类型语言的安全效率结合起来。
+    * 部署简单，Go 编译生成的可执行文件无需担心包和库的依赖关系。     * 并发性能好，即使是单个Go应用也能有效利用多个 CPU 核心。良好的语言设计，且自带完善的工具链。
+  * 劣势：
+    * import 的包不支持自定义版本，项目容易因为包的升级而不可用。
+    * 垃圾回收机制仍存在一些问题。缺乏比较完善的框架。
+* Python + Flask
+ * 优势：
+	 * 开发效率非常高，Python有非常强大的第三方库。
+	 * 用Python语言编写程序的时候，无需考虑如何管理你的底层细节
+	 * 可移植性
+	 * 可扩展性————如果你需要你的一段关键代码运行得更快或者希望某些算法不公开，你可以把你的部分程序用C或C++编写，然后在你的Python程序中使用它们
+	 * 可嵌入性
+
+ * Flask的优点
+	 * 轻巧
+	 * 简洁
+	 * 扩展性强
+ * 劣势：
+     * 作为解释型语言，运行速度较慢，且无法有效利用多线程。
+    
+从团队技术栈来看、团队中了解程序开发的基本上只有架构师、架构师比较熟悉的开发语言为python。
+
+从选型技术层来看，选型语言需要考虑可用框架、开发工具、设计模式、开发模式等方面。
+
+从业务需求来看，由于个人申请的微信小程序不能获取paykey，所以我们的程序将不会进行市场投放，高可用的、轻量级是程序所需的。
+
+基于以上三个因素的考量、最终我们选用Python + Flask最为后端编程语言。
+web端服务器结构
+
+
+		|
+		├──  
+		│   ├── controllers 
+		│   │   ├── account.py
+		|   |   ├── api
+		|   |   |   ├── __init__.py
+		|   |   |   ├── Address.py
+		|   |   |   ├── Cart.py
+		|   |   |   ├── Food.py
+		|   |   |   ├── Menber.py
+		|   |   |   ├── My.py
+		|   |   |   └── Order.py
+		│   │   ├── Finance.py
+		│   │   ├── Menber.py
+		│   │   ├── Stat.py
+		│   │   ├── Upload.py
+		│   │   ├── user
+		|   |   |   ├── chart.py
+		|   |   |   ├── index.py
+		|   |   |   └── static.py
+		│   │   └── food.py 
+		|   |
+		│   ├── interrceptors
+		│   |   ├── ApiAuthInterceptor.py 
+		│   |   ├── AuthInterceptor.py 
+		│   |   └── ErrorInterceptor.py 
+		└── 
+
+
+
+* 数据库的管理：
+* Mysql优点：
+ * 使用的核心线程是完全多线程，支持多处理器
+ * 有多种列类型：1、2、3、4、和8字节长度自有符号／无符号整数、FLOAT、DOUBLE、CHAR、VARCHAR、TEXT、BLOB、DATE、TIME、DATETIME、 TIMESTAMP、YEAR、和ENUM类型
+ * 没有内存漏洞
+ * 全面支持SQL的GROUP BY和ORDER BY子句，支持聚合函数(COUNT()、COUNT(DISTINCT)、AVG()、STD()、SUM()、MAX()和MIN())
+ * 所有列都有缺省值
+* SQL Server优点
+ * 提供了众多的Web和电子商务功能
+ * 具有强大的、灵活的、基于Web的和安全的应用程序管理
+ * 易操作性及其友好的操作界面
+* Oracle优点：
+ * 兼容性：Oracle产品采用标准SQL，并经过美国国家标准技术所(NIST)测试。与IBM SQL/DS、DB2、INGRES、IDMS/R等兼容
+ * 可移植性：Oracle的产品可运行于很宽范围的硬件与操作系统平台上。可以安装在70种以上不同的大、中、小型机上；可在VMS、DOS、UNIX、Windows等多种操作系统下工作
+ * 可联结性：Oracle能与多种通讯网络相连，支持各种协议(TCP/IP、DECnet、LU6.2等)
+ * 高生产率：Oracle产品提供了多种开发工具，能极大地方便用户进行进一步的开发
+ * 开放性:Oracle良好的兼容性、可移植性、可连接性和高生产率使Oracle RDBMS具有良好的开放性
+* 在数据库的选择上，选择多线程，支持多处理器、有大量的MySQL软件可以使用的Mysql
+
+* 路由注入
+
+```
+	#路由注入
+	route_account = Blueprint( 'account_page',__name__ )
+	#路由
+	@route_account.route( "/index" )
+	def index():
+	    pass
+	@route_account.route( "/info" )
+	def info():
+	    pass
+```
+
+* 获取用户openid
+```
+	 @staticmethod
+	    def getWeChatOpenId( code ):
+	        url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code" \
+	            .format(app.config['MINA_APP']['appid'], app.config['MINA_APP']['appkey'], code)
+	        r = requests.get(url)
+	        res = json.loads(r.text)
+	        openid = None
+	        if 'openid' in res:
+	            openid = res['openid']
+	        return openid
+```
+* 数据库防止并发库存问题，坐下selector、update
+
+```
+为了防止并发库存出问题了，我们坐下selectfor update,
+tmp_food_list = db.session.query( Food ).filter( Food.id.in_( food_ids ) )\.with_for_update().all()
+```
+* 错误反馈与日志管理
+
+```
+def error_404( e ):
+    LogService.addErrorLog( str( e ) )
+    return ops_render( 'error/error.html',{ 'status':404,'msg':'很抱歉！您访问的页面不存在' } )
+
+class LogService():
+    @staticmethod
+    def addAccessLog():
+        AccessLog = AppAccessLog()
+      ...
+        db.session.add( AccessLog )
+        db.session.commit( )
+        return True
+
+    @staticmethod
+    def addErrorLog( content ):
+        if 'favicon.ico' in request.url:
+            return
+        ErrorLog = AppErrorLog()
+       ...
+        db.session.add(ErrorLog)
+        db.session.commit()
+        return True
+```
+# 2编码风格
+
+[代码规范](https://uml163.github.io/UML/report/documents/8.1-coding_standard.html)
+
+**可读性注释与说明** 
+
+```
+    @staticmethod
+    #MD5方法生成授权码
+    def geneAuthCode(user_info = None ):
+        m = hashlib.md5()
+        str = "%s-%s-%s-%s" % (user_info.uid, user_info.login_name, user_info.login_pwd, user_info.login_salt)
+        m.update(str.encode("utf-8"))
+        return m.hexdigest()
+
+    # 登陆密码MD5加密
+    @staticmethod
+    def genePwd( pwd,salt):
+        m = hashlib.md5()
+        str = "%s-%s" % ( base64.encodebytes( pwd.encode("utf-8") ) , salt)
+        m.update(str.encode("utf-8"))
+        return m.hexdigest()
+```
+
+

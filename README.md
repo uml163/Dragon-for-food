@@ -13,7 +13,7 @@
 1. [安装包与安装部署说明](安装与部署说明.md)
 2. 用户手册
    1. [顾客端用户手册](顾客端用户手册.md)
-   2. [商家端用户手册](商家端用户手册.md)
+   2. [商家端用户手册](商家端用户手册.pdf)
 3. 所有源代码
    1. [微信小程序点餐系统前端](https://github.com/uml163/Wechat/releases/tag/final)
    2. [商家管理系统 web 前端](https://github.com/uml163/Manager/releases/tag/final)

@@ -19,7 +19,7 @@
    2. [商家管理系统 web 前端](https://github.com/uml163/Manager/releases/tag/final)
    3. 服务端+后台+数据库
 4. [软件需求规格说明书(SRS)](软件需求规格说明书.md)
-5. [软件设计文档(SDS)](软件设计文档.md)
+5. [软件设计文档(SDS)](https://github.com/uml163/Dragon-for-food/blob/master/软件设计文档.md?raw=true)
 6. [小组分工与贡献率说明](小组分工与贡献率说明.md)
 
 

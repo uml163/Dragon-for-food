@@ -21,6 +21,9 @@
 4. [软件需求规格说明书(SRS)](软件需求规格说明书.md)
 5. [软件设计文档(SDS)](软件设计文档.md)
 6. [小组分工与贡献率说明](小组分工与贡献率说明.md)
+7. 成品展示:
+
+     [皮皮龙餐饮产品展示小视频](https://v.youku.com/pad_show/id_XNDIxNjA4NjUyNA==.html?spm=a2hzp.8244740.0.0&source=https%3A%2F%2Fi.youku.com%2Fi%2Fprofile%3Fspm%3Duser.playlsit.table.7)
 
 
 
